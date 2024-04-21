@@ -53,6 +53,9 @@ async def get_user(user_id: UUID, request: Request, db: AsyncSession = Depends(g
 
     return UserResponse.model_construct(
         id=user.id,
+        bio=user.bio,
+        full_name=user.full_name,
+        profile_picture_url=user.profile_picture_url,
         username=user.username,
         email=user.email,
         last_login_at=user.last_login_at,
