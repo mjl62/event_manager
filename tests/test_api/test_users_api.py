@@ -30,6 +30,34 @@ async def test_create_user(async_client):
     # Asserts
     assert response.status_code == 201
 
+# Test that creating users works with all possible fields filled
+@pytest.mark.asyncio
+async def test_create_user_full(async_client):
+    form_data = {
+        "username": "admin",
+        "password": "secret",
+    }
+    # Login and get the access token
+    token_response = await async_client.post("/token", data=form_data)
+    access_token = token_response.json()["access_token"]
+    headers = {"Authorization": f"Bearer {access_token}"}
+
+    # Define user data for the test
+    user_data = {
+        "bio": "I am a test user, and I'm here to do some testing.",
+        "email": "test@example.com",
+        "full_name": "Test User",
+        "password": "sS#fdasrongPassword123!",
+        "profile_picture_url": "https://example.com/profile_pictures/test.jpg",
+        "username": "testuser",        
+    }
+
+    # Send a POST request to create a user
+    response = await async_client.post("/users/", json=user_data, headers=headers)
+
+    # Asserts
+    assert response.status_code == 201
+
 # You can similarly refactor other test functions to use the async_client fixture
 @pytest.mark.asyncio
 async def test_retrieve_user(async_client, user, token):
